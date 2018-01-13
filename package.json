@@ -4,7 +4,7 @@
   "description": "A node cluster manager",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "release": "np"
   },
   "repository": {
@@ -23,9 +23,32 @@
   },
   "devDependencies": {
     "fuse-box": "3.0.2",
+    "jest": "22.0.6",
     "np": "2.18.3",
     "typescript": "2.6.2",
     "uglify-es": "3.3.6",
     "uglify-js": "3.3.6"
+  },
+  "jest": {
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ],
+    "collectCoverageFrom": [
+      "**/src/**/*.{js}",
+      "!**/coverage/**",
+      "!**/node_modules/**",
+      "!**/tests/**"
+    ],
+    "coverageDirectory": "coverage",
+    "testMatch": [
+      "<rootDir>/tests/**/*.spec.js?(x)"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/coverage/",
+      "/data/",
+      ".*/_.*"
+    ]
   }
 }
