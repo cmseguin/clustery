@@ -1,2 +1,8 @@
-*
-!dist/**/*
+.fusebox/
+tests/
+src/
+.gitignore
+.npmignore
+.npmrc
+fuse.js
+tsconfig.json
