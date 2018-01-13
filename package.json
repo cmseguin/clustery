@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
-    "release": "np"
+    "release": "node fuse -p && np"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,8 @@
     "np": "2.18.3",
     "typescript": "2.6.2",
     "uglify-es": "3.3.6",
-    "uglify-js": "3.3.6"
+    "uglify-js": "3.3.6",
+    "yargs": "10.1.1"
   },
   "jest": {
     "moduleDirectories": [
