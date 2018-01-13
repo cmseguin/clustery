@@ -1,6 +1,6 @@
 {
   "name": "clustery",
-  "version": "0.0.2-0",
+  "version": "0.0.2-1",
   "description": "A node cluster manager",
   "main": "dist/index.js",
   "scripts": {
