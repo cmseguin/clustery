@@ -5,6 +5,6 @@ const fuse = FuseBox.init({
   output : "dist/$name.js",
   useTypescriptCompiler : true,
 });
-fuse.bundle("app")
+fuse.bundle("index")
   .instructions(" > index.js").hmr().watch()
 fuse.run();
