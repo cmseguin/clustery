@@ -1,0 +1,19 @@
+{
+  "name": "clustery",
+  "version": "0.0.1",
+  "description": "A node cluster manager",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cmseguin/clustery.git"
+  },
+  "author": "Charles-Mathieu Seguin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cmseguin/clustery/issues"
+  },
+  "homepage": "https://github.com/cmseguin/clustery#readme"
+}
