@@ -48,7 +48,12 @@ const fuse = FuseBox.init({
   output : "dist/$name.js",
   useTypescriptCompiler : true,
   plugins: [
-    args.production && QuantumPlugin()
+    args.production && QuantumPlugin({
+      bakeApiIntoBundle : 'index',
+      target: 'npm',
+      treeshake : true,
+      uglify: true
+    })
   ]
 });
 
