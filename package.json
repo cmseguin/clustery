@@ -2,7 +2,7 @@
   "name": "clustery",
   "version": "0.0.1",
   "description": "A node cluster manager",
-  "main": "build/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +15,15 @@
   "bugs": {
     "url": "https://github.com/cmseguin/clustery/issues"
   },
-  "homepage": "https://github.com/cmseguin/clustery#readme"
+  "homepage": "https://github.com/cmseguin/clustery#readme",
+  "dependencies": {
+    "bluebird": "3.5.1",
+    "lodash": "4.17.4"
+  },
+  "devDependencies": {
+    "fuse-box": "3.0.2",
+    "typescript": "2.6.2",
+    "uglify-es": "3.3.6",
+    "uglify-js": "3.3.6"
+  }
 }
