@@ -6,3 +6,4 @@ src/
 .npmrc
 fuse.js
 tsconfig.json
+!dist/
