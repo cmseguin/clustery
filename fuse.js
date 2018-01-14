@@ -44,15 +44,16 @@ if (args.watch) {
 
 const fuse = FuseBox.init({
   homeDir : "src",
-  target : 'node@es6',
+  target : 'server@esnext',
   output : "dist/$name.js",
   useTypescriptCompiler : true,
   plugins: [
     args.production && QuantumPlugin({
       bakeApiIntoBundle : 'index',
+      containedAPI : true,
       target: 'npm',
       treeshake : true,
-      uglify: true
+      uglify: false
     })
   ]
 });
