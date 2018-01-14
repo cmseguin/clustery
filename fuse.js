@@ -1,6 +1,6 @@
 const Promise = require('bluebird')
 const fs = Promise.promisifyAll(require('fs-extra'))
-const { FuseBox, QuantumPlugin } = require('fuse-box')
+const { FuseBox, QuantumPlugin, BabelPlugin } = require('fuse-box')
 const yargs = require('yargs')
 
 const args = yargs.option('debug', {
@@ -48,6 +48,9 @@ const fuse = FuseBox.init({
   output : "dist/$name.js",
   useTypescriptCompiler : true,
   plugins: [
+    BabelPlugin({
+      presets: ["es2015"]
+    }),
     args.production && QuantumPlugin({
       bakeApiIntoBundle : 'index',
       containedAPI : true,
