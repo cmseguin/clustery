@@ -1,80 +1,59 @@
 import cluster from 'cluster'
-import EventEmitter from 'events'
+import EventEmitter from 'eventemitter3'
 import Promise from 'bluebird'
 import * as _ from 'lodash'
 
-const clusteryMessagePrefix = 'clusteryMessage: '
+const getContext = () => {
+  if (cluster.isMaster) {
+    return {
+      processType: 'master'
+    }
+  }
 
-const isClusteryMessage = (message) => {
-  if (message.length <= clusteryMessagePrefix.length) return false
-  if (message.substr(0, clusteryMessagePrefix.length) !== clusteryMessagePrefix) return false
-  return true
-}
-
-const handleClusteryMessage = (worker, message) => {
-  let args = {}
-
-  try {
-    args = JSON.parse(message.substr(17))
-  } catch (err) { return }
-
-  instance.event.emit.apply(this, [
-    args.eventName,
-    worker,
-    ...args.eventArguments
-  ])
+  return {
+    processType: 'worker',
+    workerId: process.env.CLUSTERY_WORKER_ID
+  }
 }
 
 const master = (instance) => {
-  cluster.on('disconnect', function () { return instance.event.emit.apply(this, [ 'disconnect', ...arguments ]) })
-  cluster.on('exit', function () { return instance.event.emit.apply(this, [ 'exit', ...arguments ]) })
-  cluster.on('fork', function () { return instance.event.emit.apply(this, [ 'fork', ...arguments ]) })
-  cluster.on('listening', function () { return instance.event.emit.apply(this, [ 'listening', ...arguments ]) })
-  cluster.on('message', function () {
-    if (isClusteryMessage) return handleClusteryMessage.apply(this, arguments)
-    instance.event.emit.apply(this, [ 'message', ...arguments ])
+  _.map(instance.clusterMap, (id, index) => {
+    const worker = cluster.fork({ CLUSTERY_WORKER_ID: id })
   })
-  cluster.on('online', function () { return instance.event.emit.apply(this, [ 'online', ...arguments ]) })
-
-  _.map(instance.workers, (value, index) => {
-    const workerContext = { id }
-    const worker = cluster.fork({ workerContext })
-  })
-}
-
-const worker = (instance) => {
-  const workerCallback = _.get(instance, `workers.${_.get(process, 'env.workerContext.id')}`)
-  if (_.isFunction(workerCallback)) workerCallback()
 }
 
 const init = (instance) => {
-  if (cluster.isMaster) {
-    return master(instance)
-  }
-
-  return worker(instance)
+  if (cluster.isMaster) master(instance)
 }
 
 export class Clustery {
-  constructor ({ workers = {}, map = [] }) {
+  constructor (map, options) {
     this.clusterMap = map
-    this.workers = workers
-    this.event = new EventEmitter()
-
-    init(this)
-  }
-
-  when () {
-    if (!cluster.isMaster) return
-
-    const callback = arguments[arguments.length - 1]
-    const event = (arguments.length > 2) ? arguments[1] : arguments[0]
-    const id = (arguments.length > 2) ? arguments[0] : null
-
-    if (!_.isNull(id)) {
-      this.event.on(event, function () {
-        if (_.isFunction(callback)) callback.apply(this, arguments)
-      })
+    this.context = getContext()
+    this.options = {
+      prefix: 'clusteryMessage: ',
+      identifierDelimiter: ':',
+      ...options
     }
+
+    // Makes sure we can safely register all our events before we start
+    // our cluster
+    process.nextTick(() => init(this))
   }
+
+  whichWorker () {
+    if (cluster.isMaster) return
+    const context = getContext()
+    if (_.isNil(context.workerId)) return
+    return context.workerId
+  }
+
+  is (processType, workerId) {
+    const context = getContext()
+    if (context.processType !== processType.toLowerCase()) { return false }
+    if (!_.isNil(workerId) && context.workerId !== workerId) { return false }
+    return true
+  }
+
+  which () { return this.whichWorker() }
 }
