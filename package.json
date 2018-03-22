@@ -2,6 +2,13 @@
   "name": "clustery",
   "version": "0.1.1",
   "description": "A node cluster manager",
+  "keywords": [
+    "Node",
+    "Server",
+    "Cluster",
+    "multithreading",
+    "Javascript"
+  ],
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
