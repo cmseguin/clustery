@@ -1,7 +1,4 @@
 import cluster from 'cluster'
-import EventEmitter from 'eventemitter3'
-import Promise from 'bluebird'
-import * as _ from 'lodash'
 
 const getContext = () => {
   if (cluster.isMaster) {
@@ -17,7 +14,7 @@ const getContext = () => {
 }
 
 const master = (instance) => {
-  _.map(instance.clusterMap, (id, index) => {
+  instance.clusterMap.forEach((id, index) => {
     const worker = cluster.fork({ CLUSTERY_WORKER_ID: id })
   })
 }
@@ -44,14 +41,14 @@ export class Clustery {
   whichWorker () {
     if (cluster.isMaster) return
     const context = getContext()
-    if (_.isNil(context.workerId)) return
+    if (!context.workerId) return
     return context.workerId
   }
 
   is (processType, workerId) {
     const context = getContext()
     if (context.processType !== processType.toLowerCase()) { return false }
-    if (!_.isNil(workerId) && context.workerId !== workerId) { return false }
+    if (workerId && context.workerId !== workerId) { return false }
     return true
   }
 
