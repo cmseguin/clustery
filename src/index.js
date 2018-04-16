@@ -23,7 +23,7 @@ const init = (instance) => {
   if (cluster.isMaster) master(instance)
 }
 
-export class Clustery {
+export default class {
   constructor (map, options) {
     this.clusterMap = map
     this.context = getContext()
